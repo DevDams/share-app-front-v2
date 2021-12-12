@@ -13,6 +13,8 @@
   "dependencies": {
     "@nuxtjs/axios": "^5.13.6",
     "core-js": "^3.15.1",
+    "filepond": "^4.30.3",
+    "filepond-plugin-file-validate-type": "^1.2.6",
     "nuxt": "^2.15.7"
   },
   "devDependencies": {
