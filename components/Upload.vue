@@ -11,18 +11,19 @@
         <!-- right side -->
         <div class="right-side sm:w-1/2 h-full px-4 py-4 flex flex-col items-center justify-center">
           <!-- Uploader -->
-          <div class="description text-center" :class="loading ? 'block' : 'hidden'">
+          <div class="description text-center" :class="uploader ? 'block' : 'hidden'">
             <p class="text-lg text-black">
               Choisissez une image que vous aimeriez partager, générez un lien de téléchargement et partagez ce lien à vos amis.
             </p>
           </div>
-          <div class="form-element text-center mt-10" :class="loading ? 'block' : 'hidden'">
+          <div class="relative form-element text-center mt-8" :class="uploader ? 'block' : 'hidden'">
             <form action="/api/file" method="post" enctype="multipart/form-data">
               <input type="file" name="file" id="file" class="shadow-sm font-medium" />
             </form>
-            <button class="gen--link mt-2 bg-rose-500 text-white font-medium text-sm text-center mt-6 px-6 py-3 rounded-xl shadow-md" @click="sendLink">
+            <button class="gen-link bg-rose-500 text-white font-medium text-sm text-center mt-4 px-6 py-3 rounded-xl shadow-md" @click="sendLink">
               Générer un lien de téléchargement
             </button>
+            <p class="empty-file--message absolute w-full left-0 hidden -bottom-8 text-sm text-center text-rose-500 font-bold">{{ alert }}</p>
           </div>
           <!-- Loader -->
           <div class="loader sm:w-full h-full flex items-center justify-center" :class="isLoading ? 'block' : 'hidden'">
@@ -32,7 +33,7 @@
           <div class="share relative sm:w-full h-full text-center flex flex-col items-center justify-center" :class="share_ready ? 'block' : 'hidden'">
             <h2 class="font-bold text-2xl mt-4 text-gray-900">Votre lien est pret !</h2>
             <div class="copy mt-5 w-full">
-              <div class="cancel absolute -top-1 left-px w-10 h-10 flex items-center justify-center cursor-pointer" @click="cancel">
+              <div class="cancel absolute -top-1 left-px w-10 h-10 flex items-center justify-center cursor-pointer">
                 <button class="bg-rose-500 border-2 border-rose-500 text-lg font-medium text-black w-10 h-10 p-2 rounded shadow-sm flex items-center justify-center" @click="back">
                   <img src="@/assets/images/back.svg" alt="cross icon" class="w-full">
                 </button>
@@ -40,7 +41,7 @@
               <div class="relative flex items-center sm:w-full">
                 <input class="w-full h-12 border-2 border-violet-300 focus:outline-none focus:border-2 focus:border-violet-600 text-md font-normal text-gray-800 pl-4 pr-10 rounded-lg shadow-md" type="text" id="fileURL" placeholder="http://localhost:3000/files/download/5ff3d2fd-6bc3-42c8-b7b4-965d0037034b" readonly @click="copy">
                 <img src="~/assets/images/copy.svg" alt="copy icon" class="w-6 absolute right-4" :class="copied ? 'hidden' : 'block'" @click="copy">
-                <p class="font-semibold absolute right-4 bg-gray-400 px-2 py-1 rounded-lg text-white" :class="copied ? 'block' : 'hidden'">Copié</p>
+                <p class="font-semibold absolute right-4 bg-gray-400 px-2 py-1 rounded-lg text-white text-sm" :class="copied ? 'block' : 'hidden'">Copié</p>
               </div>
               <button class="gen--link mt-4 bg-rose-500 text-white font-medium text-sm text-center mt-6 px-6 py-3 rounded-xl shadow-md" @click="shareLink">
                 Partager le lien
@@ -54,17 +55,20 @@
 </template>
 
 <script>
-// import axios from 'axios'
+import axios from 'axios'
 import * as FilePond from 'filepond'
 import 'filepond/dist/filepond.min.css'
 import FilePondPluginValidateType from 'filepond-plugin-file-validate-type'
 export default {
   data() {
     return {
-      loading: true,
+      uploader: true,
       isLoading: false,
       copied: false,
-      share_ready: false
+      share_ready: false,
+      inputData: '',
+      alert: '',
+      fileId: ''
     }
   },
   mounted() {
@@ -103,19 +107,64 @@ export default {
     return pond
   },
   methods: {
-    sendLink() {
-      this.loading = false
-      this.isLoading = true
-      setTimeout(() => {
-        this.share_ready = true
-        this.isLoading = false
-      }, 1500);
-    },
-    cancel() {
-      return 'good'
+    async sendLink() {
+      try {
+        // Check if internet is on
+        if (navigator.onLine) {
+          const error = document.querySelector('.empty-file--message')
+          error.style.display = 'none'
+          // Check if a file has been upload
+          if (this.inputData === '') {
+            this.alert = 'Veillez choisir une image'
+            const genLink = document.querySelector('.gen-link')
+            genLink.classList.add('get-link')
+            setTimeout(() => {
+              genLink.classList.remove('get-link')
+            }, 300);
+            const error = document.querySelector('.empty-file--message')
+            error.style.display = 'block'
+          } else {
+            const error = document.querySelector('.empty-file--message')
+            error.style.display = 'none'
+            // Save file in database and in cloudinary
+            this.uploader = false
+            this.isLoading = true
+            const formData = new FormData()
+            formData.append('file', this.inputData)
+            await axios({ method: 'post', url: 'https://i-shared.herokuapp.com/api/add/file', data: formData, headers: { 'Content-Type': 'multipart/form-data', 'Access-Control-Allow-Origin': '*' } }).then(response => {
+                if (response.data.file) {
+                  this.fileId = response.data.file
+                  this.isLoading = false
+                  this.share_ready = true
+                  const fileURL = document.querySelector('#fileURL')
+                  fileURL.value = `https://hi-share.herokuapp.com/doownload/${this.fileId}`
+                  this.shareLink = `https://hi-share.herokuapp.com/doownload/${this.fileId}`
+                  this.inputData = ''
+                }
+              }).catch(error => {
+                console.log('api error', error)
+              })
+          }
+        } else {
+          const error = document.querySelector('.empty-file--message')
+          error.style.display = 'block'
+          this.alert = 'Vérifiez votre connection internet'
+        }
+      } catch (error) {
+        console.log('error trycatch', error)
+      }
     },
     copy() {
-      return 'copy'
+      this.copied = true
+      setTimeout(() => {
+        this.copied = false
+      }, 1500)
+      const fileURL = document.querySelector('#fileURL')
+      fileURL.select()
+      document.execCommand("copy")
+      if (document.execCommand("copy")) {
+        console.log('Copied')
+      }
     },
     shareLink() {
       if (navigator.share) {
@@ -137,7 +186,9 @@ export default {
     },
     back() {
       this.share_ready = false
-      this.loading = true
+      this.isLoading = false
+      const filePondCancel = document.querySelector(".filepond--action-remove-item")
+      filePondCancel.click()
     }
   },
 }
@@ -151,6 +202,28 @@ export default {
 
 .left-side {
   background-color: rgb(154, 87, 255);
+}
+
+.get-link {
+  animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes shake {
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+  
+  20%, 80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%, 50%, 70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%, 60% {
+    transform: translate3d(4px, 0, 0);
+  }
 }
 
 @media (max-width: 840px) {
