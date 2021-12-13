@@ -173,24 +173,25 @@ export default {
         console.log('Copied')
       }
     },
-    shareLink() {
-      if (navigator.share) {
-        navigator
-          .share({
-            title: "Partage d'image via Hi Shared",
-            text: "Hey regarde j'ai ajouté cet image sur Hi shared pour toi",
-            url: this.shareLinkUrl,
-          })
-          .then(() => {
-            return 'Successful share'
-          })
-          .catch((error) => {
-            this.alert = error
-            return `Error sharing ${error}`
-          });
-      } else {
-        this.alert = "Browser doesn't support Web Share API"
-        return "Browser doesn't support Web Share API"
+    async shareLink() {
+      try {
+        if (navigator.share) {
+          await navigator.share({
+              title: "Partage d'image via Hi Shared",
+              text: "Hey regarde j'ai ajouté cet image sur Hi shared pour toi",
+              url: this.shareLinkUrl,
+            }).then(() => {
+              return 'Successful share'
+            }).catch((error) => {
+              this.alert = error
+              return `Error sharing ${error}`
+            });
+        } else {
+          this.alert = "Browser doesn't support Web Share API"
+          return "Browser doesn't support Web Share API"
+        }
+      } catch (error) {
+        console.log('trycatch error', error)
       }
     },
     back() {
