@@ -5,19 +5,23 @@
       <!-- Upload card -->
       <div class="card bg-white shadow-lg rounded-lg border-2 border flex mt-8">
         <!-- left side -->
-        <div class="left-side sm:w-1/2 h-full flex items-center justify-center rounded-lg">
+        <div class="left-side relative sm:w-1/2 h-full flex items-center justify-center rounded-lg">
           <img :src="preview" alt="preview image" class="object-cover w-full h-full rounded-lg">
+          <div class="overlay absolute top-0 left-0 w-full h-full rounded-xl flex items-center justify-center">
+            <img src="~/assets/images/copy.svg" alt="copy icon" class="w-6 absolute right-4">
+          </div>
         </div>
         <!-- right side -->
         <div class="right-side bg-sky-50 sm:w-1/2 h-full px-4 py-4 flex flex-col items-center justify-center">
           <!-- Uploader -->
           <div class="description text-center">
-            <p class="text-lg text-black">
-              Votre image est prete à etre télécharger. Commencez le téléchargement quand vous voulez.
+            <h2 class="font-bold text-2xl mt-4 text-gray-900">Votre image est prete à etre télécharger.</h2>
+            <p class="text-lg text-black mt-2">
+              Commencez le téléchargement quand vous voulez.
             </p>
           </div>
-          <div class="relative form-element text-center mt-8">
-            <p class="text-xl font-bold text-center mt-3">{{ file.fileName }}</p>
+          <div class="relative form-element text-center mt-4">
+            <p class="text-xl font-medium text-center mt-3">{{ file.fileName }}</p>
             <p v-if="file" class="text-lg font-medium text-center">{{ parseInt(file.fileSize/1000) }} KB</p>
             <button class="gen-link bg-rose-500 text-white font-medium text-sm text-center mt-4 px-6 py-3 rounded-xl shadow-md">
               Télécharger !
@@ -99,6 +103,10 @@ body {
 }
 
 .left-side {
-  background-color: rgb(154, 87, 255);
+  background-color: rgba(154, 87, 255, 0.24);
+}
+
+.left-side .overlay {
+  background: rgba(0, 0, 0, 0.5);
 }
 </style>

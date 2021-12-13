@@ -67,6 +67,7 @@ export default {
       copied: false,
       share_ready: false,
       inputData: '',
+      shareLinkUrl: '',
       alert: '',
       fileId: ''
     }
@@ -138,7 +139,7 @@ export default {
                   this.share_ready = true
                   const fileURL = document.querySelector('#fileURL')
                   fileURL.value = `https://hi-share.herokuapp.com/doownload/${this.fileId}`
-                  this.shareLink = `https://hi-share.herokuapp.com/doownload/${this.fileId}`
+                  this.shareLinkUrl = `https://hi-share.herokuapp.com/doownload/${this.fileId}`
                   this.inputData = ''
                 }
               }).catch(error => {
@@ -178,21 +179,24 @@ export default {
           .share({
             title: "Partage d'image via Hi Shared",
             text: "Hey regarde j'ai ajouté cet image sur Hi shared pour toi",
-            url: "https://put-here-url.com",
+            url: this.shareLinkUrl,
           })
           .then(() => {
             return 'Successful share'
           })
           .catch((error) => {
+            this.alert = error
             return `Error sharing ${error}`
           });
       } else {
+        this.alert = "Browser doesn't support Web Share API"
         return "Browser doesn't support Web Share API"
       }
     },
     back() {
       this.share_ready = false
       this.isLoading = false
+      this.uploader = true
       const filePondCancel = document.querySelector(".filepond--action-remove-item")
       filePondCancel.click()
     }
@@ -201,13 +205,19 @@ export default {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&display=swap');
+
+button, input {
+  font-family: 'Readex Pro', sans-serif;
+}
+
 .card {
   width: 800px;
   height: 400px;
 }
 
 .left-side {
-  background-color: rgb(154, 87, 255);
+  background-color: #9a57ff;
 }
 
 .get-link {
