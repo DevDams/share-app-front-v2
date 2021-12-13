@@ -39,7 +39,7 @@
                 </button>
               </div>
               <div class="relative flex items-center sm:w-full">
-                <input class="w-full h-12 border-2 border-violet-300 focus:outline-none focus:border-2 focus:border-violet-600 text-md font-normal text-gray-800 pl-4 pr-10 rounded-lg shadow-md" type="text" id="fileURL" placeholder="http://localhost:3000/files/download/5ff3d2fd-6bc3-42c8-b7b4-965d0037034b" readonly @click="copy">
+                <input class="w-full h-12 border-2 border-violet-300 focus:outline-none focus:border-2 focus:border-violet-600 text-md font-normal text-gray-800 pl-4 pr-10 rounded-lg shadow-md" type="text" id="fileURL" placeholder="https://hi-share.herokuapp.com/doownload/5ff3d2fd-6bc3-42c8-b7b4-965d0037034b" readonly @click="copy">
                 <img src="~/assets/images/copy.svg" alt="copy icon" class="w-6 absolute right-4" :class="copied ? 'hidden' : 'block'" @click="copy">
                 <p class="font-semibold absolute right-4 bg-gray-400 px-2 py-1 rounded-lg text-white text-sm" :class="copied ? 'block' : 'hidden'">Copié</p>
               </div>
@@ -143,6 +143,9 @@ export default {
                 }
               }).catch(error => {
                 console.log('api error', error)
+                this.uploader = true
+                this.isLoading = false
+                this.alert = 'Oupsss quelque chose s\'est mal passé, rééssayez !'
               })
           }
         } else {
@@ -152,6 +155,9 @@ export default {
         }
       } catch (error) {
         console.log('error trycatch', error)
+        this.uploader = true
+        this.isLoading = false
+        this.alert = 'Oupsss quelque chose s\'est mal passé, rééssayez !'
       }
     },
     copy() {
