@@ -136,7 +136,7 @@ body {
 }
 
 .preview-overlay {
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.5);
   width: 100vw;
   height: 100%;
   position: absolute;
