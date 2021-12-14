@@ -3,8 +3,8 @@
     <!-- preview overlay -->
     <div v-if="visible_preview" class="preview-overlay" @click="show"></div>
     <!-- Big preview image -->
-    <div v-if="visible_preview" class="imge-preview w-2/3 sm:w-96 h-auto shadow-lg rounded-lg">
-      <img v-if="preview" :src="preview" alt="preview image" class="object-contain w-full h-full rounded-lg shadow-lg">
+    <div v-if="visible_preview" class="imge-preview w-2/3 sm:w-96 h-auto shadow-lg border-4 border-violet-500">
+      <img v-if="preview" :src="preview" alt="preview image" class="object-contain w-full h-full shadow-lg">
     </div>
     <!-- Download card -->
     <div class="block-card">
@@ -13,7 +13,7 @@
       <div class="card bg-white shadow-lg rounded-lg border-2 border flex flex-col mt-8 sm:flex sm:flex-row">
         <!-- left side -->
         <div class="left-side relative bg-gray-50 shadow-sm sm:shadow sm:w-1/2 h-full flex items-center justify-center rounded-lg">
-          <img v-if="preview" :src="preview" alt="preview image" class="absolute object-cover sm:w-full h-full rounded-lg">
+          <img v-if="preview" :src="preview" alt="preview image" class="absolute object-cover sm:w-full h-full">
           <div class="overlay absolute top-0 left-0 w-full h-full rounded-xl flex items-center justify-center">
             <img src="~/assets/images/fullscreen.svg" alt="copy icon" class="w-12 h-12 cursor-pointer" @click="show">
           </div>
@@ -22,14 +22,13 @@
         <div class="right-side w-full sm:w-1/2 h-full px-4 py-4 flex flex-col items-center justify-center">
           <!-- Uploader -->
           <div class="description text-center">
-            <h2 class="font-bold text-2xl mt-4 text-gray-900">Votre image est prete à etre télécharger.</h2>
-            <p class="text-lg text-black mt-2">
+            <h2 class="font-bold text-xl mt-4 text-gray-900">Votre image est prete à etre télécharger.</h2>
+            <p class="text-md text-black mt-2">
               Commencez le téléchargement quand vous voulez.
             </p>
           </div>
           <div class="relative form-element text-center mt-4">
-            <p class="text-xl font-medium text-center mt-3">{{ file.fileName }}</p>
-            <p v-if="file" class="text-lg font-medium text-center">{{ parseInt(file.fileSize/1000) }} KB</p>
+            <p v-if="file" class="text-md font-medium text-center">Taille: {{ parseInt(file.fileSize/1000) }} KB</p>
             <div class="flex flex-col justify-center">
               <button class="gen-link bg-rose-500 text-white font-medium text-sm text-center mt-2 sm:mt-4 px-6 py-3 rounded-xl shadow-md" @click="download(file)">
                 Télécharger !
