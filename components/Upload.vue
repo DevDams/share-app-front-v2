@@ -268,11 +268,6 @@ button, input {
 
   .card .right-side {
     width: 100%;
-    /* background: linear-gradient(0deg, rgba(154, 87, 255, 0.6), rgba(154, 87, 255, 0.3)), url('@/assets/images/Selfie.png');
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: contain;
-    border-radius: 8px; */
   }
 
   .loader, .share {
