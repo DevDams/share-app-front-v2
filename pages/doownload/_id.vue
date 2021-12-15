@@ -1,11 +1,5 @@
 <template>
   <div class="flex items-center justify-center w-full h-screen">
-    <!-- preview overlay -->
-    <div v-if="visible_preview" class="preview-overlay" @click="show"></div>
-    <!-- Big preview image -->
-    <div v-if="visible_preview" class="imge-preview w-2/3 sm:w-96 h-auto shadow-lg border-4 border-violet-500">
-      <img v-if="preview" :src="preview" alt="preview image" class="object-contain w-full h-full shadow-lg">
-    </div>
     <!-- Download card -->
     <div class="block-card">
       <h1 class="text-3xl text-center font-medium">Hi Shared</h1>
@@ -15,7 +9,6 @@
         <div class="left-side relative bg-gray-50 shadow-sm sm:shadow sm:w-1/2 h-full flex items-center justify-center rounded-lg">
           <img v-if="preview" :src="preview" alt="preview image" class="absolute object-cover sm:w-full h-full">
           <div class="overlay absolute top-0 left-0 w-full h-full rounded-xl flex items-center justify-center">
-            <img src="~/assets/images/fullscreen.svg" alt="copy icon" class="w-12 h-12 cursor-pointer" @click="show">
           </div>
         </div>
         <!-- right side -->
@@ -124,7 +117,7 @@ body {
 }
 
 .left-side .overlay {
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.3);
 }
 
 .imge-preview {
@@ -136,7 +129,7 @@ body {
 }
 
 .preview-overlay {
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.3);
   width: 100vw;
   height: 100%;
   position: absolute;
