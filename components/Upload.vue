@@ -138,8 +138,8 @@ export default {
                   this.isLoading = false
                   this.share_ready = true
                   const fileURL = document.querySelector('#fileURL')
-                  fileURL.value = `https://hi-share.herokuapp.com/doownload/${this.fileId}`
-                  this.shareLinkUrl = `https://hi-share.herokuapp.com/doownload/${this.fileId}`
+                  fileURL.value = `https://hi-shared.herokuapp.com/doownload/${this.fileId}`
+                  this.shareLinkUrl = `https://hi-shared.herokuapp.com/doownload/${this.fileId}`
                   this.inputData = ''
                 }
               }).catch(error => {
